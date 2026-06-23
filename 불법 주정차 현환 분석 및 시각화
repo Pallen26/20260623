@@ -1,0 +1,310 @@
+#불법 주정차 현황 분석 및 시각화
+# 주정차랑.. 뭐 민원?
+# 얼마나 불법 주정차를 어디에서 언제 많이 하는지 분석
+
+
+#화성시는 도농복합도시구조를 이루고 있다. 특히, 화성시의 안내체계는 지역별로 수준 편차가 크고, 거점 간 거리 간격이 넓어 대부분 차량으로 이동하여 보행으로 전환되는 이동행태로 인하여 차량 중심의 길찾기 체계가 중심이 되어 있다. 
+#화성시는 동부 생활권인 동탄, 향남, 봉담 등의 지역에 도심이 형성되어 있고, 그 외의 지역은 농촌권양상을 띄고 있는 형태로 전형적인 도농복합형 도시구조를 이루고 있어
+#동탄동 등을 중심으로 하는 도심 생활권 외의 지역은 인구밀도가 낮은 농촌 중심 소생활권이 점적 분포되어 있어 화성시 내 각 지역 간 미흡한 교통여건을 갖추고 있다(화성시 도시주택국 도시디자인과, 2020)
+#대도심권인 경우 주요거점, 공공청사 등이 중심지에 밀집되어 있어, 이곳을 중심으로 하는 보행량이 많지만, 화성시의 경우 중심지가 각 지역 내 산재되어 있어 거점 간 거리 간격이 넓고, 대부분 차량으로 이동하여 보행으로 전환되므로 타 지역에 비해
+#보행인구가 적어 차량 중심 길찾기 정보에 편중되어있어, 향후 도심과 외곽별 특성을 고려한 보행자 중심의 사인 계획이 확충되어야 한다. 
+
+import pandas as pd 
+
+df1=pd.read_csv("C:\\Users\\FORYOUCOM\\Downloads\\경기도 화성시_주정차단속현황_20260515.csv",encoding='cp949') 
+df2=pd.read_csv("C:\\Users\\FORYOUCOM\\Downloads\\경기도 화성시_인구_20260420.csv",encoding='cp949')
+df3=pd.read_csv("C:\\Users\\FORYOUCOM\\Downloads\\경기도 화성시_공영주차장 정보_20251117.csv",encoding='cp949')
+df4=pd.read_csv("C:\\Users\\FORYOUCOM\\Downloads\\경기도 화성시_공동주택 현황_20250702.csv",encoding='cp949')
+df5=pd.read_csv("C:\\Users\\FORYOUCOM\\Downloads\\주정차위반단속위치현황.csv",encoding='cp949')
+
+
+print(df1.columns.tolist()) #'단속기관', '과태료 부과연월', '과태료 부과건수', '부과금액(천원)', '데이터기준일자'
+print(df2.columns.tolist()) #'행정구역', '인구수', '남자인구수', '여자인구수', '0-9세', '10-19세', '20-29세', '30-39세', '40-49세', '50-59세', '60-69세', '70-79세', '80-89세', '90-99세', '100-109세', '110세 이상'
+print(df3.columns.tolist()) #'구간이름', '면수', '장애면수', '정기면수', '주소', '재입장시간', '위도', '경도', '데이터기준일자'
+print(df4.columns.tolist()) #'명칭', '도로명주소', '단지분류', '동수', '세대수', '면적', '관리사무소연락처', '관리기관', '관리자 연락처', '데이터기준일'
+
+print(df1['단속기관'].head())
+print(df2['행정구역'].head())
+print(df3['주소'].head())
+print(df4['도로명주소'].head())
+
+df2['읍면동']=df2['행정구역']
+
+def emd(address):
+    if pd.isna(address):
+        return None
+    words=address.split()
+    for word in reversed(words):
+        if word.endswith(('동','읍','면')) or ('동' in word or '읍' in word or '면' in word):
+            import re
+            # '반송동105'에서 '반송동'만 쏙 뽑아내기
+            match = re.search(r'.*?[동읍면]', word)
+            if match:
+                return match.group()
+    return None
+df3['읍면동']=df3['주소'].apply(emd)
+df4['읍면동']=df4['도로명주소'].apply(emd)
+
+dongtan_map = {
+    '반송동': '동탄1동', '석우동': '동탄1동',
+    '능동': '동탄3동',
+    '청계동': '동탄4동',
+    '영천동': '동탄5동',
+    '오산동': '동탄6동',
+    '신동': '동탄7동', '목동': '동탄7동', '산척동': '동탄7동', '송동': '동탄7동',
+    '장지동': '동탄8동', '금곡동': '동탄8동', '방교동': '동탄8동'
+}
+
+df3['읍면동'] = df3['읍면동'].replace(dongtan_map) # 추가
+df4['읍면동'] = df4['읍면동'].replace(dongtan_map) # 추가
+
+df3_dong=df3.groupby('읍면동')['면수'].sum().reset_index(name='총 주차면수')
+df4_dong=df4.groupby('읍면동')['세대수'].sum().reset_index(name='총 아파트세대수')
+df_infra=pd.merge(df2,df3_dong,on='읍면동',how='left')
+df_infra=pd.merge(df_infra,df4_dong,on='읍면동',how='left')
+df_infra['총 주차면수']=df_infra['총 주차면수'].fillna(0)
+df_infra['총 아파트세대수']=df_infra['총 아파트세대수'].fillna(0)
+
+print('--동별 인프라 결합 결과--')
+print(df_infra[['읍면동','인구수','총 주차면수','총 아파트세대수']])
+
+df1_monthly=df1.groupby(['과태료 부과연월']).agg({'과태료 부과건수':'sum','부과금액(천원)':'sum'}).reset_index()
+print('--화성시 월별 단속 현황--')
+print(df1_monthly.head(12))
+
+# 언제 단속 건수가 튀는지 확인해보쟈
+import matplotlib.pyplot as plt
+import seaborn as sns 
+
+plt.rcParams['font.family']='Malgun Gothic'
+plt.rcParams['axes.unicode_minus']=False
+
+plt.figure(figsize=(12,5))
+sns.lineplot(data=df1_monthly,x='과태료 부과연월',y='과태료 부과건수',marker='o',color='r')
+plt.title('화성시 불법 주정차 월별 단속 건수 추이')
+plt.xticks(rotation=45)
+plt.grid(True)
+plt.tight_layout()
+plt.show() 
+# 34월에 피크를 찍고, 1-2월에 최저를 찍음
+#이게 그때 불법주정차를 많이 한다면 뭐때문일까?
+#사방에서 축제나 꽃놀이? 하러가나? 
+#아니면 관련 공무원들이 그때 많이 도나?
+
+#화성은 도농복합도시구조를 이루고 있으니 도심vs외곽 비교를 해보쟈~
+df_infra['인구당 주차면수']=(df_infra['총 주차면수']/df_infra['인구수'])*1000
+df_infra['인구당 주차면수']=df_infra['인구당 주차면수'].fillna(0)
+
+def classify_region(row):
+    region=row['읍면동']
+    if '동탄' in region or region in ['향남읍','봉담읍']: #향남읍:85284명, 봉담읍:110795명
+        return '도심 생활권'
+    else:
+        return '외곽 농촌권'
+df_infra['지역분류']=df_infra=df_infra.apply(classify_region,axis=1)
+print('--지표 추가 후 인프라 데이터 확인--')
+df_infra = df2.copy()
+
+df_infra = pd.merge(df_infra, df3_dong, on='읍면동', how='left') #주차장 데이터와 아파트 데이터를 차례로 병합
+df_infra = pd.merge(df_infra, df4_dong, on='읍면동', how='left')
+
+df_infra['총 주차면수'] = df_infra['총 주차면수'].fillna(0) # 빈 값 처리
+df_infra['총 아파트세대수'] = df_infra['총 아파트세대수'].fillna(0)
+
+df_infra['인구당 주차면수'] = (df_infra['총 주차면수'] / df_infra['인구수']) * 1000 #인구 1,000명당 주차면수 연산 (기존의 인구수 컬럼 이름이 '인구수' 맞는지 확인)
+df_infra['인구당 주차면수'] = df_infra['인구당 주차면수'].fillna(0) # 혹시 모를 결측치 방지
+def classify_region(row):
+    region = row['읍면동']
+    if '동탄' in str(region) or region in ['향남읍', '봉담읍']:
+        return '도심 생활권'
+    else:
+        return '외곽 농촌권'
+
+df_infra['지역분류'] = df_infra.apply(classify_region, axis=1)
+
+df_infra = df_infra.reset_index(drop=True)
+
+columns_to_show = ['읍면동', '지역분류', '인구수', '인구당 주차면수', '총 주차면수', '총 아파트세대수']
+
+print(df_infra[columns_to_show].head())
+
+plt.rcParams['font.family']='Malgun Gothic'
+plt.rcParams['axes.unicode_minus']=False
+plt.figure(figsize=(8,5))
+sns.barplot(data=df_infra,x='지역분류',y='인구당 주차면수')
+plt.title('도심vs외곽 인구 1000명당 공영주차장 주차면수 비교')
+plt.grid(True)
+plt.show()
+
+df_vulnerable=df_infra[df_infra['총 주차면수']>0].sort_values(by='인구당 주차면수').head(10)
+plt.figure(figsize=(10,5))
+sns.barplot(data=df_vulnerable,x='읍면동',y='인구당 주차면수')
+plt.title('화성시 내 주차 인프라가 취약한 동네')
+plt.xticks(rotation=45)
+plt.ylabel('인구 1000명당 주차 면수')
+plt.tight_layout()
+plt.show()
+
+df5['읍면동']=df5['단속장소'].str.split().str[0]
+df5['읍면동']=df5['읍면동'].replace(dongtan_map)
+def classify_region_new(region):
+    region_str=str(region)
+    if '동탄'in region or '봉담'in region_str or '향남'in region_str:
+        return '도심 생활권'
+    else:
+        return '외곽 농촌권'
+df5['지역분류']=df5['읍면동'].apply(classify_region_new)
+print('--단속위치 데이터 정제--')
+print(df5[['단속장소','읍면동','지역분류']].head(3))
+
+#도심vs외곽 단속 건수 비교 
+print('--지역분류 단속 건수 비교--')
+print(df5['지역분류'].value_counts())
+
+print('--화성시에서 불법 주정차 단속 다발 지역은?--')
+print(df5['읍면동'].value_counts().head(10))
+
+
+#주차장과 단속 상관관계 분석
+df5_count=df5['읍면동'].value_counts().reset_index(name='단속건수')
+df_final=pd.merge(df_infra,df5_count,on='읍면동',how='left')
+df_final['단속건수']=df_final['단속건수'].fillna(0)
+
+plt.figure(figsize=(10,6))
+sns.scatterplot(data=df_final,x='인구당 주차면수',y='단속건수',hue='지역분류',size='인구수',sizes=(40,500),alpha=0.7)
+plt.title('인구당 주차면수와 불법 주정차와의 상관관계')
+plt.xlabel('인구 1000명당 주차면수')
+plt.ylabel('붑법주정차 건수')
+plt.grid(True)
+plt.show()
+
+
+df_final['raw_score'] = (df_final['인구수'] * df_final['총 아파트세대수']) / (df_final['총 주차면수'] + 1) * (df_final['단속건수'] + 1)
+
+
+min_val = df_final['raw_score'].min()
+max_val = df_final['raw_score'].max()
+
+import numpy as np
+from scipy.stats import zscore, spearmanr
+
+print(df_final[['인구수','총 아파트세대수','총 주차면수','단속건수']].corr())
+
+df_final['인구수_log']=np.log1p(df_final['인구수'])
+df_final['세대수_log']=np.log1p(df_final['총 아파트세대수'])
+df_final['단속건수_log']=np.log1p(df_final['단속건수'])
+df_final['주차면수_역']=-df_final['총 주차면수']
+
+cols=['인구수_log','세대수_log','주차면수_역','단속건수_log']
+for c in cols:
+    df_final[f'{c}_z']=zscore(df_final[c])
+z_cols = [f'{c}_z' for c in cols]
+
+df_final['지수_균등가중']=df_final[z_cols].mean(axis=1)
+
+# 4-B. 엔트로피 가중 지수 (데이터 변동성 기반으로 가중치를 자동 산출)
+def entropy_weights(df, cols):
+    norm=(df[cols] - df[cols].min())/(df[cols].max()-df[cols].min())
+    norm=norm.replace(0, 1e-9)
+    p=norm /norm.sum()
+    k= 1/np.log(len(df))
+    entropy=-k * (p * np.log(p)).sum()
+    return (1 - entropy)/(1 - entropy).sum()
+
+weights = entropy_weights(df_final, cols)
+print('엔트로피 가중치:\n', weights)
+
+df_final['지수_엔트로피가중'] = sum(df_final[f'{c}_z'] * w for c, w in zip(cols, weights))
+
+df_final['랭킹_균등가중'] = df_final['지수_균등가중'].rank(ascending=False, method='min').astype(int)
+df_final['랭킹_엔트로피가중'] = df_final['지수_엔트로피가중'].rank(ascending=False, method='min').astype(int)
+
+#가중치 방식에 결과가 얼마나 민감한지 검증
+rho, p_value = spearmanr(df_final['랭킹_균등가중'], df_final['랭킹_엔트로피가중'])
+print(f'균등가중 vs 엔트로피가중 랭킹 상관계수: {rho:.3f} (p={p_value:.3f})')
+
+result = df_final.sort_values('랭킹_균등가중')[
+    ['읍면동','지역분류','랭킹_균등가중','지수_균등가중','랭킹_엔트로피가중','지수_엔트로피가중']
+]
+print(result.head(10).to_string(index=False))
+
+print("현재 df_final의 실제 컬럼들:", df_final.columns.tolist())
+
+
+#학습 및 예측 모델 만들기
+import pandas as pd
+import numpy as np
+import json
+from xgboost import XGBRegressor
+
+features = ['인구수', '총 아파트세대수', '총 주차면수']
+df_final['인구당_아파트수']=df_final['총 아파트세대수']/(df_final['인구수'] + 1)
+df_final['인구당_주차면수']=df_final['총 주차면수']/(df_final['인구수'] + 1)
+
+features=['인구수', '총 아파트세대수','총 주차면수','인구당_아파트수','인구당_주차면수']
+X_train=df_final[features]
+X_train=df_final[features]
+y_target1=df_final['단속건수']     #첫번째 예측 목표-이용량(단속건수)
+y_target2=df_final['총 주차면수']   #두번째 예측 목표-실제 주차 인프라 면수
+
+model_users=XGBRegressor(n_estimators=100,max_depth=4,random_state=42)
+model_users.fit(X_train,y_target1)
+
+model_cars = XGBRegressor(n_estimators=100, max_depth=4, random_state=42)
+model_cars.fit(X_train, y_target2)
+
+print("XGBoost 모델 2종 학습 완료")
+
+pop_grid = [10000, 30000, 50000, 70000, 100000, 130000]
+apt_grid = [5000, 10000, 20000, 30000, 40000]
+parking_grid = [100, 300, 500, 800, 1200]
+
+sim_records = []
+for p in pop_grid:
+    for a in apt_grid:
+        for pk in parking_grid:
+            sim_records.append({
+                '인구수': int(p), 
+                '총 아파트세대수': int(a), 
+                '총 주차면수': int(pk)
+            })
+
+# 150가지 조합(6 * 5 * 5)을 가진 가상 시뮬레이션용 데이터프레임 변환
+df_sim = pd.DataFrame(sim_records)
+
+
+df_sim['인구당_아파트수'] = df_sim['총 아파트세대수'] / (df_sim['인구수'] + 1)
+df_sim['인구당_주차면수'] = df_sim['총 주차면수'] / (df_sim['인구수'] + 1)
+features = ['인구수', '총 아파트세대수', '총 주차면수', '인구당_아파트수', '인구당_주차면수']
+df_sim = df_sim[features]
+pred_users = model_users.predict(df_sim)
+pred_cars = model_cars.predict(df_sim)
+
+df_sim['predicted_users'] = np.clip(np.round(pred_users), 0, None).astype(int)
+df_sim['predicted_cars'] = np.clip(np.round(pred_cars), 0, None).astype(int)
+
+df_sim['parking_rate'] = (df_sim['predicted_cars'] / (df_sim['predicted_users'] + 1)) * 100
+df_sim['parking_rate'] = df_sim['parking_rate'].clip(upper=100).round(1)
+
+print("XGBoost 예측 연산 성공")
+
+web_predict_dict = {}
+
+for _, row in df_sim.iterrows():
+    p_val = int(row['인구수'])
+    a_val = int(row['총 아파트세대수'])
+    pk_val = int(row['총 주차면수'])
+    
+    key = f"{p_val}_{a_val}_{pk_val}"
+    
+    web_predict_dict[key] = {
+        "users": int(row['predicted_users']),
+        "cars": int(row['predicted_cars']),
+        "rate": float(row['parking_rate'])
+    }
+
+
+with open('web_ml_data.json', 'w', encoding='utf-8') as f:
+    json.dump(web_predict_dict, f, ensure_ascii=False, indent=4)
+
+print(f"파일 내보내기 완료(총 {len(web_predict_dict)}개 조합)")

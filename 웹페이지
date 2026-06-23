@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>화성시 주차 인프라 진단 대시보드</title>
+    <script defer src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700&display=swap');
+        body { font-family: 'Pretendard', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen p-4 md:p-8 flex flex-col items-center">
+
+    <div class="max-w-5xl w-full space-y-8">
+
+        <div class="text-center md:text-left">
+            <span class="bg-blue-50 text-blue-600 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Spatial & Data Analysis</span>
+            <h1 class="text-3xl font-extrabold text-slate-900 mt-2">화성시 불법 주정차 및 인프라 대시보드</h1>
+            <p class="text-slate-500 mt-1">도농복합 특성에 따른 데이터 시각화 및 맞춤형 읍면동 진단</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-white rounded-2xl shadow-md p-6 border border-slate-100 flex flex-col">
+                <h2 class="text-lg font-bold text-slate-900 mb-2 flex items-center gap-2">
+                    📈 월별 불법 주정차 단속 추이
+                </h2>
+                <p class="text-sm text-slate-500 mb-4">근3년 화성시 전체의 월간 단속 건수 변화 추세</p>
+
+                <div class="bg-slate-100 rounded-xl flex items-center justify-center overflow-hidden border border-slate-200 aspect-[16/10] mb-4">
+                    <img src="C:\\Users\\FORYOUCOM\OneDrive\\바탕 화면\\학교\\세미해커톤\\화성시 불법 주정차 월별 단속 건수 추이.png" alt="월별 단속 건수 추이 그래프" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="hidden flex-col items-center text-slate-400 p-4 text-center">
+                        <span class="text-3xl mb-1">📊</span>
+                        <p class="text-xs">파이썬 그래프 이미지를<br>'chart_monthly.png' 파일명으로 같은 폴더에 넣어주세요.</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 rounded-xl p-4 border border-slate-100 text-sm text-slate-600 leading-relaxed mt-auto">
+                    <strong class="text-slate-900 block mb-1">💡 데이터 인사이트 해석</strong>
+                    분석 결과, 불법 주정차 단속은 <span class="text-blue-600 font-bold">1~2월에 최저점</span>을 기록한 후, <span class="text-red-600 font-bold">3~4월에 급격히 피크</span>를 찍는 패턴을 보입니다. 봄철 유동 인구 급증(축제,행사등)에 따른 차량 이동량 증가와 이에 대응하는 행정 당국의 집중 단속 기간이 맞물린 결과로 해석할 수 있습니다.
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-md p-6 border border-slate-100 flex flex-col">
+                <h2 class="text-lg font-bold text-slate-900 mb-2 flex items-center gap-2">
+                    🗺️ 공간 분할 및 주차 결핍 분포 지도
+                </h2>
+                <p class="text-sm text-slate-500 mb-4">도심 생활권과 외곽 농촌권의 양극화 현황</p>
+
+                <div class="bg-slate-100 rounded-xl flex items-center justify-center overflow-hidden border border-slate-200 aspect-[16/10] mb-4">
+                    <img src="C:\\Users\FORYOUCOM\\OneDrive\\바탕 화면\\학교\\인구당 주차면수와 불법 주정차와의 상관관계.png" alt="화성시 주차 인프라 지도" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="hidden flex-col items-center text-slate-400 p-4 text-center">
+                        <span class="text-3xl mb-1">🗺️</span>
+                        <p class="text-xs">파이썬 지도 시각화 이미지를<br>'chart_map.png' 파일명으로 같은 폴더에 넣어주세요.</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 rounded-xl p-4 border border-slate-100 text-sm text-slate-600 leading-relaxed mt-auto">
+                    <strong class="text-slate-900 block mb-1">💡 데이터 인사이트 해석</strong>
+                    외곽 농촌권은 면수가 20(인구 1000명당) 넘는 순간부터 거의 모든 지역이 불법주정차 0에 가깝게 수렴합니다. 그래프가 선형 관계가 아니라 "임계점형" 구조를 띄고있어, 주차 면수가 낮은 도심 동네의 주차면수를 늘려야합니다. 다만, 도심권은 주차면수가 다 비슷하게 낮은데도 불법주정차 건수는 천차만별이라 공급 부족보다 인구밀집·상업집중 같은 다른 요인이 더 크게 작용할 것이라 판단됩니다.
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <div class="bg-white rounded-2xl shadow-md p-6 border border-slate-100 flex flex-col justify-between">
+                <div class="mb-6">
+                    <h2 class="text-xl font-bold text-slate-900">🔍 맞춤형 읍면동 인프라 진단기</h2>
+                    <p class="text-sm text-slate-500 mt-1">우리 동네의 상세 인프라 수치와 종합 의견을 확인하세요</p>
+                </div>
+
+                <div class="space-y-4">
+                    <select id="dong-select" class="block w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                        <option value="" disabled selected>-- 동네를 선택하세요 --</option>
+                        <optgroup label="🏙️ 도심 생활권 (동탄/주요 읍동)">
+                            <option value="동탄1동">동탄1동</option><option value="동탄2동">동탄2동</option><option value="동탄3동">동탄3동</option><option value="동탄4동">동탄4동</option><option value="동탄5동">동탄5동</option><option value="동탄6동">동탄6동</option><option value="동탄7동">동탄7동</option><option value="동탄8동">동탄8동</option><option value="향남읍">향남읍</option><option value="봉담읍">봉담읍</option><option value="남양읍">남양읍</option><option value="새솔동">새솔동</option><option value="병점1동">병점1동</option><option value="병점2동">병점2동</option><option value="반월동">반월동</option><option value="기배동">기배동</option><option value="화산동">화산동</option>
+                        </optgroup>
+                        <optgroup label="🌾 외곽 농촌권 (읍면)">
+                            <option value="우정읍">우정읍</option><option value="매송면">매송면</option><option value="봉담면">봉담면</option><option value="비봉면">비봉면</option><option value="마도면">마도면</option><option value="송산면">송산면</option><option value="서신면">서신면</option><option value="팔탄면">팔탄면</option><option value="양감면">양감면</option><option value="장안면">장안면</option><option value="정남면">정남면</option><option value="동탄면">동탄면</option>
+                        </optgroup>
+                    </select>
+
+                    <button id="diagnose-btn" class="w-full cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition-colors duration-200 text-center">
+                        진단하기
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-md p-6 border border-slate-100 flex flex-col justify-between">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">🔮 가상 인프라 예측 시뮬레이터</h2>
+                    <p class="text-sm text-slate-500 mt-1">인구, 세대, 주차면수를 조절해 미래 주차환경을 예측합니다.</p>
+                </div>
+
+                <div class="space-y-4 mt-4">
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-slate-600">총 인구수</span>
+                            <span id="val-pop" class="font-bold text-blue-600">10,000 명</span>
+                        </div>
+                        <input type="range" id="input-pop" min="10000" max="130000" step="10000" value="50000" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-slate-600">아파트 세대수</span>
+                            <span id="val-apt" class="font-bold text-blue-600">5,000 세대</span>
+                        </div>
+                        <input type="range" id="input-apt" min="5000" max="40000" step="5000" value="20000" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-slate-600">공영 주차면수</span>
+                            <span id="val-parking" class="font-bold text-blue-600">100 면</span>
+                        </div>
+                        <input type="range" id="input-parking" min="100" max="1200" step="100" value="500" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                    </div>
+
+                    <button id="predict-btn" class="w-full cursor-pointer bg-purple-600 hover:bg-purple-700 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition-colors duration-200 text-center">
+                        AI 예측 모델 가동하기
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="predict-result" class="bg-white rounded-2xl shadow-md p-6 border border-purple-100 max-w-xl mx-auto hidden">
+            <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">🎯 AI 시뮬레이션 결과</h3>
+            <div class="grid grid-cols-3 gap-4 text-center mb-4">
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                    <span class="text-xs text-slate-500 block">예측 단속건수</span>
+                    <span id="res-users" class="text-base font-bold text-slate-800">-</span>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                    <span class="text-xs text-slate-500 block">확보 주차면</span>
+                    <span id="res-cars" class="text-base font-bold text-slate-800">-</span>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                    <span class="text-xs text-slate-500 block">인당 주차가능률</span>
+                    <span id="res-rate" class="text-base font-bold text-purple-600">-</span>
+                </div>
+            </div>
+            <div id="res-summary" class="bg-purple-50 rounded-xl p-4 border border-purple-100 text-sm text-slate-700 leading-relaxed">
+                슬라이더 값에 일치하는 모델 결과 멘트가 표기됩니다.
+            </div>
+        </div>
+
+    </div>
+
+    <div id="modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
+        <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl overflow-hidden transform transition-all border border-slate-100">
+            <div class="bg-slate-900 p-6 text-white flex justify-between items-center">
+                <div>
+                    <h2 id="modal-title" class="text-xl font-bold">--- 인프라 진단서</h2>
+                    <p id="modal-zone" class="text-xs text-slate-400 mt-1">지역 분류: ---</p>
+                </div>
+                <button id="close-modal-top" class="cursor-pointer text-slate-400 hover:text-white text-2xl font-semibold">&times;</button>
+            </div>
+            <div class="p-6 space-y-6">
+                <div class="grid grid-cols-3 gap-4 text-center">
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <span class="text-xs text-slate-500 block">인구수</span>
+                        <span id="data-pop" class="text-base font-bold text-slate-800">0명</span>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <span class="text-xs text-slate-500 block">공영 주차면수</span>
+                        <span id="data-parking" class="text-base font-bold text-slate-800">0면</span>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <span class="text-xs text-slate-500 block">단속 건수</span>
+                        <span id="data-crackdown" class="text-base font-bold text-slate-800">0건</span>
+                    </div>
+                </div>
+                <div class="bg-blue-50/50 border border-blue-100 rounded-xl p-4 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs font-semibold text-blue-700 block">종합 주차취약지수</span>
+                        <span id="data-score" class="text-3xl font-extrabold text-blue-900">0.00점</span>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs font-semibold text-slate-500 block">화성시 내 위험 랭킹</span>
+                        <span id="data-rank" class="text-2xl font-bold text-red-600">최상위 0위</span>
+                    </div>
+                </div>
+                <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                    <h3 class="text-sm font-bold text-slate-900 flex items-center gap-1">📋 분석가 종합 진단 의견</h3>
+                    <p id="data-opinion" class="text-sm text-slate-600 mt-2 leading-relaxed">선택된 지역의 분석 데이터가 기재되는 칸입니다.</p>
+                </div>
+            </div>
+            <div class="bg-slate-50 p-4 border-t border-slate-100 flex justify-end">
+                <button id="close-modal-btn" class="cursor-pointer bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold px-4 py-2 rounded-lg text-sm transition-colors duration-200">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // 1. 기존 데이터 및 읍면동 진단기 로직
+        const infraData = {
+            "동탄1동": { zone: "도심 생활권", pop: 51230, parking: 450, crackdown: 2800, score: 85.4, rank: 5, opinion: "초밀집형 도심 생활권으로 중심 상가와 학원가 주변의 야간 주차 대란이 심각합니다. 시민들의 안전신문고 신고 비율이 매우 높으므로, 보행 안전 사인 계획과 공영 주차타워 확충이 최우선입니다." },
+            "동탄2동": { zone: "도심 생활권", pop: 36540, parking: 280, crackdown: 1200, score: 62.1, rank: 11, opinion: "상가 밀집 구역을 중심으로 주말 및 야간 유동인구가 집중되어 불법 주정차가 빈발합니다. 주차 유연 구간 지정 및 가변형 안내 시스템 도입이 효과적일 것입니다." },
+            "동탄3동": { zone: "도심 생활권", pop: 42100, parking: 310, crackdown: 1950, score: 71.8, rank: 8, opinion: "능동 중심의 주거 밀집 지역으로 아파트 세대수 대비 공영 주차 인프라가 비좁아 마찰이 잦습니다. 인근 유휴 부지를 활용한 저비용 평면 주차장 조성이 권장됩니다." },
+            "동탄4동": { zone: "도심 생활권", pop: 55430, parking: 210, crackdown: 3400, score: 100.0, rank: 1, opinion: "화성시 종합 주차취약지수 1위 지역입니다. 폭발적인 인구 및 아파트 세대수에 비해 공급된 공영주차 인프라가 턱없이 부족하여 상시 단속이 빗발치고 있어 즉각적인 행정 개입이 시급합니다." },
+            "동탄5동": { zone: "도심 생활권", pop: 40820, parking: 350, crackdown: 1650, score: 68.4, rank: 10, opinion: "테크노밸리 등 지식산업센터 주변으로 출퇴근 시간대 불법 주정차가 쏠리는 특성을 보입니다. 기업 연계형 주차 공유제 셔틀 및 보행 유도 사인 확충이 적합합니다." },
+            "동탄6동": { zone: "도심 생활권", pop: 32150, parking: 520, crackdown: 2100, score: 55.2, rank: 13, opinion: "오산동 일대 광역교통 거점으로 유동 차량은 많으나 공영주차장 공급이 비교적 양호하여 지수는 중위권입니다. 장기 주차 차량 관리를 위한 스마트 주차 정보 안내 체계가 필요합니다." },
+            "동탄7동": { zone: "도심 생활권", pop: 83400, parking: 480, crackdown: 3100, score: 94.2, rank: 2, opinion: "호수공원 상권과 대단지 아파트가 맞물려 화성시에서 인구 및 갈등 압박이 두 번째로 높은 최우역 지역입니다. 주말 관광객과 주거 수요가 겹치는 시간대별 맞춤형 주차 통제가 요구됩니다." },
+            "동탄8동": { zone: "도심 생활권", pop: 41200, parking: 230, crackdown: 1800, score: 76.5, rank: 7, opinion: "장지동 일대 신규 입주 단지가 많아 아파트 공급 대비 주차 인프라 결핍이 뚜렷합니다. 상가 이면도로의 보행 환경을 개선하고 주민 신고 다발 구역 안내 사인을 강화해야 합니다." },
+            "향남읍": { zone: "도심 생활권", pop: 85280, parking: 620, crackdown: 2450, score: 88.1, rank: 4, opinion: "남부권 거점 도심지로 행정, 상업 기능이 밀집해 단속 건수가 매우 높습니다. 전통시장 및 구도심 주변의 만성적 공급 부족을 해결하기 위해 복합 주차타워 건립이 최우선인 지역입니다." },
+            "봉담읍": { zone: "도심 생활권", pop: 110790, parking: 810, crackdown: 2200, score: 91.3, rank: 3, opinion: "화성시 인구 1위 지역으로 대학가 및 와우리 일대 구도심의 주차 마찰이 극심합니다. 인구당 주차면수 수치는 평균이나 절대적 수요가 많으므로 유연한 주차 허용 구간 확대가 필요합니다." },
+            "남양읍": { zone: "도심 생활권", pop: 43200, parking: 410, crackdown: 1350, score: 59.7, rank: 12, opinion: "시청 소재지로서 행정 통행 수요가 많고 테크노밸리 근로자 이동이 잦습니다. 낮 시간대 불법 주정차가 중심지에 몰리는 경향이 있어 관공서 주차장 공유 활성화가 권장됩니다." },
+            "새솔동": { zone: "도심 생활권", pop: 24500, parking: 180, crackdown: 980, score: 51.4, rank: 14, opinion: "송산그린시티 단일 주거 구역으로 아파트 상가 인근 학원가 주변에 단속이 집중됩니다. 어린이 보호구역 및 보행자 중심 사인 계획 조성이 우선시되는 지역입니다." },
+            "병점1동": { zone: "도심 생활권", pop: 28400, parking: 240, crackdown: 1450, score: 70.2, rank: 9, opinion: "역세권 주변 구도심 특성을 지니고 있어 이면도로 주차난이 심각합니다. 공영주차장 신설 부지가 부족하므로 자투리 땅을 활용한 쌈지주차장 및 보행로 분리 계획이 시급합니다." },
+            "병점2동": { zone: "도심 생활권", pop: 25100, parking: 290, crackdown: 1100, score: 48.9, rank: 15, opinion: "아파트 밀집 구역으로 대단지 내부 주차장은 존재하나 외부 상가 진입 차량의 불법 주정차가 관측됩니다. 공영 주차 정보 표지판 고도화를 통한 유도 정책이 적합합니다." },
+            "반월동": { zone: "도심 생활권", pop: 34200, parking: 220, crackdown: 1750, score: 79.1, rank: 6, opinion: "수원, 용인 접경지로 공장 및 주거지가 혼재되어 불법 주정차 민원이 빗발칩니다. 인구당 주차면수가 매우 협소하므로 인근 기업체 협력 주차 공간 확보가 대안이 될 수 있습니다." },
+            "기배동": { zone: "도심 생활권", pop: 14800, parking: 120, crackdown: 420, score: 35.6, rank: 16, opinion: "역사문화 거점 인근으로 유동 차량 분포 대비 인프라가 협소하여 중위권 취약점을 보입니다. 거점 중심의 통행 특성을 감안한 점적 주차 공간 정비가 요구됩니다." },
+            "화산동": { zone: "도심 생활권", pop: 23400, parking: 190, crackdown: 680, score: 32.1, rank: 17, opinion: "공업 시설과 주거 시설이 섞여 있는 과도기적 도심지입니다. 화물차 밤샘 주차 등 특수 불법 주정차가 빈발하므로 차종별 차별화된 단속 및 전용 주차장 매칭이 필요합니다." },
+            "우정읍": { zone: "외곽 농촌권", pop: 17230, parking: 320, crackdown: 210, score: 14.2, rank: 18, opinion: "전형적인 외곽 농촌권으로 수치상 인구당 면수는 여유로우나, 조암리 등 구도심 행정 거점 시장 주변에만 단속이 쏠리는 점적 분포를 보입니다. 거점 안내 중심의 차량 사인이 유효합니다." },
+            "매송면": { zone: "외곽 농촌권", pop: 7100, parking: 150, crackdown: 180, score: 11.5, rank: 21, opinion: "그린벨트 및 교통 통과 화물 차량이 많은 지역입니다. 상시 보행자는 적으나 주요 국도변 불법 주정차 위험이 있으므로 통행 속도 제어를 위한 안내 체계가 강조됩니다." },
+            "봉담면": { zone: "외곽 농촌권", pop: 5200, parking: 110, crackdown: 60, score: 8.1, rank: 24, opinion: "인구 밀도가 극히 낮고 소규모 농가 중심 소생활권이 분산되어 있습니다. 주차 인프라의 절대량은 부족하나 마찰 건수가 적어 물리적 확충보다는 이동식 차량 단속 위주 관리가 적합합니다." },
+            "비봉면": { zone: "외곽 농촌권", pop: 6400, parking: 180, crackdown: 140, score: 9.8, rank: 22, opinion: "택지 개발이 일부 진행 중인 외곽 지역으로 점차 주동 통행량이 증가하고 있습니다. 향후 도심권 편입 가능성에 대비해 선제적 공공청사 주차 부지 확보가 권장됩니다." },
+            "마도면": { zone: "외곽 농촌권", pop: 6800, parking: 290, crackdown: 250, score: 12.4, rank: 19, opinion: "바이오밸리 등 일반산업단지 배후 지역으로 대형 화물 차량의 주정차가 주요 이슈입니다. 인구 대비 주차장은 넓으나 대형차 전용 베이가 부족하므로 공단 내 인프라 재정비가 필요합니다." },
+            "송산면": { zone: "외곽 농촌권", pop: 10800, parking: 340, crackdown: 310, score: 12.1, rank: 20, opinion: "사강 시장 중심가와 사강로 일대에 상업 유동 차량 단속이 일어납니다. 외곽 지역 중에서는 통행 갈등이 조금 관측되는 편이므로 장날 가변 주차 허용 등 유연한 행정이 알맞습니다." },
+            "서신면": { zone: "외곽 농촌권", pop: 7230, parking: 410, crackdown: 320, score: 8.5, rank: 23, opinion: "제부도, 전곡항 등 서해안 관광 특수 지역입니다. 평일 지수는 매우 안전하지만 주말 행락철 불법 주정차가 폭발하므로, 상시 확충 대신 주말 한정 가변 안내 체계 구축이 효율적입니다." },
+            "팔탄면": { zone: "외곽 농촌권", pop: 9800, parking: 210, crackdown: 190, score: 7.9, rank: 25, opinion: "소규모 개별 입지 공장들이 흩어져 있어 차량 중심 길찾기 의존도가 절대적입니다. 보행 인구의 발생 자체가 드물어 거점 중심의 가이드 표지판 정비가 실용적입니다." },
+            "양감면": { zone: "외곽 농촌권", pop: 3900, parking: 120, crackdown: 40, score: 4.2, rank: 28, opinion: "화성시 최남단 농촌 지역으로 차량 간 교행 마찰 및 주정차 민원이 거의 발생하지 않는 안전 지역입니다. 기본 인프라 유지 보수 중심의 행정이 요구됩니다." },
+            "장안면": { zone: "외곽 농촌권", pop: 9100, parking: 260, crackdown: 110, score: 6.8, rank: 26, opinion: "우정읍 거점과 연계되는 외곽 농촌 구역입니다. 도로변 가시성 확보 위주의 반사경 및 기본 안전 사인 확충만으로도 충분히 주차 안전 관리가 가능한 수준입니다." },
+            "정남면": { zone: "외곽 농촌권", pop: 11200, parking: 190, crackdown: 290, score: 18.7, rank: 17, opinion: "외곽 농촌권 중 공장 밀집도와 인구가 많아 단속 및 마찰 지수가 농촌 지역 중에서는 가장 높게 나타납니다. 읍내 중심 도로 통행권 확보를 위한 점진적 공영 면수 확대가 필요합니다." },
+            "동탄면": { zone: "외곽 농촌권", pop: 2900, parking: 150, crackdown: 30, score: 2.1, rank: 29, opinion: "신도시 개발에서 제외된 잔여 농촌 구역으로 유동 인구가 극히 적어 주차 위험도가 화성시에서 가장 낮습니다. 별도의 추가 인프라 투자 우선순위에서 제외됩니다." }
+        };
+
+        const dongSelect = document.getElementById('dong-select');
+        const diagnoseBtn = document.getElementById('diagnose-btn');
+        const modal = document.getElementById('modal');
+
+        const modalTitle = document.getElementById('modal-title');
+        const modalZone = document.getElementById('modal-zone');
+        const dataPop = document.getElementById('data-pop');
+        const dataParking = document.getElementById('data-parking');
+        const dataCrackdown = document.getElementById('data-crackdown');
+        const dataScore = document.getElementById('data-score');
+        const dataRank = document.getElementById('data-rank');
+        const dataOpinion = document.getElementById('data-opinion');
+
+        const closeTop = document.getElementById('close-modal-top');
+        const closeBtn = document.getElementById('close-modal-btn');
+
+        diagnoseBtn.addEventListener('click', () => {
+            const selectedDong = dongSelect.value;
+            if (!selectedDong) {
+                alert('진단할 읍면동을 먼저 선택해 주세요!');
+                return;
+            }
+            const data = infraData[selectedDong];
+            if (data) {
+                modalTitle.innerText = `[${selectedDong}] 인프라 진단서`;
+                modalZone.innerText = `지역 분류: ${data.zone}`;
+                dataPop.innerText = `${data.pop.toLocaleString()}명`;
+                dataParking.innerText = `${data.parking.toLocaleString()}면`;
+                dataCrackdown.innerText = `${data.crackdown.toLocaleString()}건`;
+                dataScore.innerText = `${data.score.toFixed(1)}점`;
+                dataRank.innerText = `${data.rank}위`;
+                dataOpinion.innerText = data.opinion;
+                modal.classList.remove('hidden');
+            }
+        });
+
+        function closeModal() { modal.classList.add('hidden'); }
+        closeTop.addEventListener('click', closeModal);
+        closeBtn.addEventListener('click', closeModal);
+        window.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+
+        // 2. 🔮 머신러닝 예측기 구동 스크립트 (수학 수식 실시간 연산 버전)
+        const inPop = document.getElementById('input-pop');
+        const inApt = document.getElementById('input-apt');
+        const inParking = document.getElementById('input-parking');
+
+        function updatePredictLabels() {
+            document.getElementById('val-pop').innerText = `${parseInt(inPop.value).toLocaleString()} 명`;
+            document.getElementById('val-apt').innerText = `${parseInt(inApt.value).toLocaleString()} 세대`;
+            document.getElementById('val-parking').innerText = `${parseInt(inParking.value).toLocaleString()} 면`;
+        }
+
+        inPop.addEventListener('input', updatePredictLabels);
+        inApt.addEventListener('input', updatePredictLabels);
+        inParking.addEventListener('input', updatePredictLabels);
+
+        document.getElementById('predict-btn').addEventListener('click', () => {
+            const pop = Number(inPop.value);
+            const apt = Number(inApt.value);
+            const parking = Number(inParking.value);
+
+            let predUsers = (pop * 0.04) + (apt * 0.08) - (parking * 1.5);
+            predUsers = Math.max(0, Math.round(predUsers));
+
+            const predCars = parking;
+
+            let predRate = (predCars / pop) * 1000;
+            predRate = Math.min(100, Math.max(0, predRate));
+
+            document.getElementById('res-users').innerText = `${predUsers.toLocaleString()} 건`;
+            document.getElementById('res-cars').innerText = `${predCars.toLocaleString()} 면`;
+            document.getElementById('res-rate').innerText = `${predRate.toFixed(1)}%`;
+
+            let summaryText = "";
+            if (predRate < 5) {
+                summaryText = `⚠️ <strong>위험 (인프라 극심 부족):</strong> 인구 대비 주차가능률이 ${predRate.toFixed(1)}%로 매우 낮습니다. 불법 주정차 단속 예측 건수가 <strong>${predUsers.toLocaleString()}건</strong>까지 폭증할 우려가 있으며, 즉각적인 주차타워 건립 및 이면도로 제한 조치가 필요합니다.`;
+            } else if (predRate >= 5 && predRate < 15) {
+                summaryText = `ℹ️ <strong>경계 (도심형 평균 갈등):</strong> 현재 화성시 주요 동탄 생활권과 유사한 수치입니다. 주차 공급이 타이트하여 상가 밀집지역을 중심으로 약 <strong>${predUsers.toLocaleString()}건</strong> 내외의 지속적인 단속 갈등이 발생할 확률이 높습니다. 가변 주차제 활용이 권장됩니다.`;
+            } else {
+                summaryText = `✅ <strong>안전 (외곽 농촌권형 안정지):</strong> 인구 1,000명당 주차면수가 매우 여유롭습니다. 주차 인프라의 임계점을 넘었기 때문에 불법 주정차 단속 건수는 <strong>${predUsers.toLocaleString()}건</strong> 미만으로 수렴하며 쾌적한 차량 통행 환경이 유지됩니다.`;
+            }
+
+            document.getElementById('res-summary').innerHTML = summaryText;
+            document.getElementById('predict-result').classList.remove('hidden');
+        });
+
+        // 초기 라벨 세팅
+        updatePredictLabels();
+
+    });
+    </script>
+</body>
+</html>
